@@ -14,6 +14,8 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
+import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'sanitize.css/sanitize.css';
 
 // Import root app
@@ -85,3 +87,20 @@ if (!window.Intl) {
 if (process.env.NODE_ENV === 'production') {
   require('offline-plugin/runtime').install(); // eslint-disable-line global-require
 }
+
+export var axiosInstance;
+
+export function createAxiosInstance(){
+  const authToken = localStorage.getItem('AUTH_TOKEN');
+
+  axiosInstance = axios.create({
+    baseURL: 'http://localhost:8000'
+  });
+
+  if(authToken !== null){
+    axiosInstance.defaults.headers.common['Authorization'] = 'Bearer ' + authToken;
+  }
+  axiosInstance.defaults.headers.common['Accept'] = 'application/json';
+  axiosInstance.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:8000';
+}
+createAxiosInstance();
